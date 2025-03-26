@@ -67,6 +67,7 @@ class ProductController extends Controller
 
     }
 
+    // Update /api/products/{productId}
     public function updateProducts(Request $request, $productId){
 
         $products = Product::findOrFail($productId);
@@ -94,4 +95,6 @@ class ProductController extends Controller
 
 
     }
+
+  
 }

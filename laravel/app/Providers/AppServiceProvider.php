@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Cart;
+use App\Models\Order;
+use App\Observers\ModelActivityObserver;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,5 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        Order::observe(ModelActivityObserver::class);
+        Cart::observe(ModelActivityObserver::class);
     }
 }
