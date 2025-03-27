@@ -18,7 +18,7 @@ class ProductController extends Controller
 
     public function createProducts(Request $request){
        $request->validate([
-            'name'=>'required|string|max:255',
+            'name'=>'required|string|max:255|unique:products',
             'category_id' => 'required|exists:categories,id',
             'pricing' => 'required|numeric',
             'description' => 'nullable|string',
@@ -96,5 +96,5 @@ class ProductController extends Controller
 
     }
 
-  
+
 }

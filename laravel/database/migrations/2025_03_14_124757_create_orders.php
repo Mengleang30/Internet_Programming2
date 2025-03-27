@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('order_date')->useCurrent()->nullable(false);
+            // $table->timestamp('order_date')->useCurrent()->nullable(false);
+            $table->timestamp('order_date')->nullable(false);
             $table->double('total_price')->nullable(false);
             $table->bigInteger('customer_id')->unsigned();
             $table->timestamps();
