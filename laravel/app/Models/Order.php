@@ -14,7 +14,7 @@ class Order extends Model
     //
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['customer_id', 'product_id', 'total_price', 'order_date'];
+    protected $fillable = ['customer_id', 'total_price', 'order_date'];
 
     protected $dates = ['deleted_at'];
 
