@@ -30,11 +30,17 @@ class CategoryTest extends TestCase
     }
     public function test_can_access_create_category()
     {
+        $name = 'Test Category ' . uniqid();
+
         $response = $this->post('/api/categories', [
-            'name' => 'Test Category'. uniqid(),
+            'name' => $name,
         ]);
 
         $response->assertStatus(201);
+        $response->assertCreated();
+        $this->assertDatabaseHas('categories', [
+            'name' => $name ,
+        ]);
     }
     public function test_can_access_get_category_by_id()
     {
@@ -64,13 +70,11 @@ class CategoryTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // sort categories
-
 
     public function test_can_access_delete_category()
     {
 
-        $response = $this->delete('/api/categories/6');
+        $response = $this->delete('/api/categories/1');
         // restore the category
 
         $response->assertStatus(200);
@@ -78,7 +82,7 @@ class CategoryTest extends TestCase
 
     public function test_can_access_get_limited_categories()
     {
-        $response = $this->get('/api/categories/limited_category/5');
+        $response = $this->get('/api/categories/limited_category/4');
 
         $response->assertStatus(200);
     }
@@ -91,12 +95,10 @@ class CategoryTest extends TestCase
 
     public function test_can_access_restore_category()
     {
-        $response = $this->post('/api/categories/restore/6');
+        $response = $this->post('/api/categories/restore/1');
 
         $response->assertStatus(200);
     }
-
-
 
 
 }
