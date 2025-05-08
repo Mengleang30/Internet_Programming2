@@ -12,17 +12,35 @@ class UploadController extends Controller
 {
     public function upload(Request $request)
     {
-        // Validate the request
         $request->validate([
-            'document' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'document' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $path = Storage::disk('minio')->put('gallery', $request->file('document'));
+        $file = $request->file('document');
+        $filename = time() . '_' . $file->getClientOriginalName();
 
-        // Get full URL (optional)
-        $url = env('MINIO_URL') . '/' . $path;
+        // Save original image to MinIO
+        $originalPath = 'images/originals/' . $filename;
+        Storage::disk('minio')->put($originalPath, file_get_contents($file));
 
-        return back()->with('success', 'document uploaded successfully! URL: ' . $url);
+        // Create a thumbnail
+        $thumbnailImage = Image::make($file)->resize(300, 300, function ($constraint) {
+            $constraint->aspectRatio();
+            //$constraint->upsize();
+        })->encode($file->getClientOriginalExtension());
+
+        // Save thumbnail to MinIO
+        $thumbnailPath = 'images/thumbnails/' . $filename;
+        Storage::disk('minio')->put($thumbnailPath, (string) $thumbnailImage);
+
+        // Generate URLs
+        $baseUrl = rtrim(env('MINIO_URL'), '/');
+        $originalUrl = $baseUrl . '/' . $originalPath;
+        $thumbnailUrl = $baseUrl . '/' . $thumbnailPath;
+
+        return back()->with('success', 'Uploaded successfully!')
+                     ->with('original_url', $originalUrl)
+                     ->with('thumbnail_url', $thumbnailUrl);
     }
     public function uploadGallery(Request $request)
     {
