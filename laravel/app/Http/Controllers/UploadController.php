@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Imagick;
 
+
 class UploadController extends Controller
 {
     public function upload(Request $request)
@@ -23,10 +24,10 @@ class UploadController extends Controller
         $originalPath = 'images/originals/' . $filename;
         Storage::disk('minio')->put($originalPath, file_get_contents($file));
 
-        // Create a thumbnail
+        // Create a thumbnail (e.g., 300x300)
         $thumbnailImage = Image::make($file)->resize(300, 300, function ($constraint) {
             $constraint->aspectRatio();
-            //$constraint->upsize();
+            $constraint->upsize();
         })->encode($file->getClientOriginalExtension());
 
         // Save thumbnail to MinIO
