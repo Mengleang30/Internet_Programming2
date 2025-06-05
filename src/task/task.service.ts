@@ -21,11 +21,16 @@ export class TaskService {
     });
   }
 
-  findOne(id: number) {
-    return this.taskRepo.findOne({
+  async findOne(id: number) {
+    const task = await this.taskRepo.findOne({
       where: { id },
       relations: ['user'],
     });
+    if (!task) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+
+    return task;
   }
   async update(id: number, updateData: Partial<Task>) {
     await this.taskRepo.update(id, updateData);

@@ -1,17 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
-import {  } from '@nestjs/common';
+
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  createUser(@Body() userData: Partial<User>) {
-    return this.userService.createUser(userData);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  createUser(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
   }
 
   @Get()
@@ -23,12 +23,14 @@ export class UserController {
     return this.userService.findOne(id);
   }
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateData: Partial<User>) {
-    return this.userService.update(+id, updateData);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  update(@Param('id') id: string, @Body() updateUserDTO: UpdateUserDto) {
+    const updatedUser = this.userService.update(+id, updateUserDTO);
+    return { message: 'User updated successfully', data: updatedUser };
   }
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.userService.remove(id);
+  remove(@Param('id') id: String) {
+    return this.userService.remove(+id);
   }
   
 }

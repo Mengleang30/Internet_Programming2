@@ -1,16 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TaskService } from './task.service';
+import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Task } from './entities/task.entity';
 
 @Controller('tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  createTask(@Body() taskData: Partial<Task>) {
-    return this.taskService.createTask(taskData);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  createTask(@Body() createTaskDto: CreateTaskDto) {
+    return this.taskService.createTask(createTaskDto);
   }
 
   @Get()
@@ -19,8 +20,8 @@ export class TaskController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.taskService.findOne(id);
+  findOne(@Param('id') id: string) {
+    return this.taskService.findOne(+id);
   }
 
   @Patch('complete/:id')
@@ -29,8 +30,9 @@ export class TaskController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateData: Partial<Task>) {
-    return this.taskService.update(id, updateData);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  update(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {
+    return this.taskService.update(id, updateTaskDto);
   }
 
   @Delete('clear_all')
