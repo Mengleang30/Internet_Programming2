@@ -37,7 +37,7 @@ export class UserService {
     return this.findOne(id)
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);

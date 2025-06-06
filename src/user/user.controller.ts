@@ -4,12 +4,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 
+@UsePipes(new ValidationPipe({ whitelist: true }))
+ //{ whitelist: true }, it automatically strips out any properties that are not defined in your DTO.
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+ 
   @Post()
-  @UsePipes(new ValidationPipe({ whitelist: true }))
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
   }
@@ -23,14 +25,13 @@ export class UserController {
     return this.userService.findOne(id);
   }
   @Patch(':id')
-  @UsePipes(new ValidationPipe({ whitelist: true }))
   update(@Param('id') id: string, @Body() updateUserDTO: UpdateUserDto) {
     const updatedUser = this.userService.update(+id, updateUserDTO);
     return { message: 'User updated successfully', data: updatedUser };
   }
   @Delete(':id')
   remove(@Param('id') id: String) {
-    return this.userService.remove(+id);
+    return this.userService.delete(+id);
   }
   
 }

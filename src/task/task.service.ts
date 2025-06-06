@@ -10,9 +10,9 @@ export class TaskService {
     private taskRepo: Repository<Task>,
   ) {}
 
-  createTask(userData: Partial<Task>) {
-    const user = this.taskRepo.create(userData);
-    return this.taskRepo.save(user);
+  createTask(taskData: Partial<Task>) {
+    const task = this.taskRepo.create(taskData);
+    return this.taskRepo.save(task);
   }
 
   findAll() {

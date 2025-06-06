@@ -4,12 +4,13 @@ import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
+@UsePipes(new ValidationPipe({ whitelist: true }))
 @Controller('tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ whitelist: true }))
+  
   createTask(@Body() createTaskDto: CreateTaskDto) {
     return this.taskService.createTask(createTaskDto);
   }
@@ -30,7 +31,6 @@ export class TaskController {
   }
 
   @Patch(':id')
-  @UsePipes(new ValidationPipe({ whitelist: true }))
   update(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {
     return this.taskService.update(id, updateTaskDto);
   }
