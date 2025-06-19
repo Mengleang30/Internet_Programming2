@@ -1,0 +1,18 @@
+type Hotel {
+  id: ID!
+  name: String!
+  address: String!
+  phone: String!
+}
+
+type Query {
+  hotels: [Hotel!]    # Query to get all hotels
+  hotel(id: Int!): Hotel
+}
+
+
+type Mutation {
+  addHotel(name: String!, address: String!, phone: String!): Hotel
+  updateHotel(id: Int!, name: String!, address: String!, phone: String!): Hotel
+  deleteHotel(id: Int!): Hotel
+}

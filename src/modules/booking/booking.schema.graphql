@@ -1,0 +1,20 @@
+scalar DateTime
+
+type Booking {
+  id: ID!
+  hotel_id: Int!
+  start_date: DateTime!
+  end_date: DateTime!
+  is_checked_in: Boolean!
+  price: Float!
+}
+
+type Query {
+  bookingsByDateRange(start: DateTime!, end: DateTime!): [Booking!]!
+}
+
+type Mutation {
+  bookHotel(hotel_id: Int!, start_date: DateTime!, end_date: DateTime!, price: Float!): Booking!
+  cancelBooking(id: Int!): Booking!
+  checkIn(id: Int!): Booking!
+}
